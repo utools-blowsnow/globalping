@@ -1,13 +1,11 @@
 <script>
 import {defineComponent} from 'vue'
-import AMapLoader from '@amap/amap-jsapi-loader';
 import {useConfigStore} from "@/stores/config";
 
 export default defineComponent({
   name: "TracerouteMap",
   data() {
     return {
-      AMap: null,
       map: null,
       configStore: useConfigStore()
     }
@@ -21,7 +19,7 @@ export default defineComponent({
     }
   },
   methods: {
-    async init(ips){
+    async init(ips) {
       this.ips = ips;
       let points = [];
       let res = await this.batchGetIpInfo(this.ips);
@@ -39,30 +37,22 @@ export default defineComponent({
         })
       }
       console.log('points', points);
-      this.initAMap(points);
-    },
-    async initAmpLoader(key){
-      let AMap = await AMapLoader.load({
-        key: key, // 申请好的Web端开发者Key，首次调用 load 时必填
-        version: "2.0", // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
-        plugins: [], // 需要使用的的插件列表，如比例尺'AMap.Scale'等
-        Loca: {
-          version: "2.0",
-        }
-      })
-      this.AMap = AMap;
+      try {
+        await this.initAMap(points);
+      } catch (e) {
+        console.error(e);
+        this.$message.error('地图加载失败');
+      }
     },
     async initAMap(points) {
-      if (!this.AMap) {
-        await this.initAmpLoader(this.configStore.mapKey);
-      }
-      let map = new this.AMap.Map("tracerouteMapContainer", {
+      let map = new AMap.Map("tracerouteMapContainer", {
         zoom: 2,
         showIndoorMap: false, //关闭室内地图
         //   viewMode: "3D",
         pitch: 48,
         center: [points[0].lng, points[0].lat],
       });
+      console.log(map, map.Wh);
       this.map = map;
       // 创建loca
       let loca = new Loca.Container({
@@ -171,7 +161,7 @@ export default defineComponent({
       return fetch(`https://api.ip2location.io/?ip=${ip}`).then(res => res.json());
     },
     batchGetIpInfo(ips) {
-      return fetch(`http://ip-api.com/batch`,{
+      return fetch(`http://ip-api.com/batch`, {
         method: 'POST',
         body: JSON.stringify(ips)
       }).then(res => res.json()).then(res => {
@@ -196,7 +186,9 @@ export default defineComponent({
 
 <template>
   <div>
-    高德地图KEY：<el-input v-model="configStore.mapKey" show-password size="mini" style="width: 200px;" @change="initAmpLoader"></el-input>
+<!--    高德地图KEY：-->
+<!--    <el-input v-model="configStore.mapKey" show-password size="mini" style="width: 200px;"-->
+<!--              @change="initAmpLoader"></el-input>-->
     <div id="tracerouteMapContainer"></div>
   </div>
 </template>

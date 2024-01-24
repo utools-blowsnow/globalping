@@ -8,7 +8,8 @@ import TracerouteMap from "@/components/TracerouteMap.vue";
 
 
 let vConsole = null;
-
+vConsole = new VConsole();
+vConsole.hideSwitch()
 // 监听Ctrl + F12 打开调试
 document.addEventListener('keydown', function (e) {
   if (e.ctrlKey && e.keyCode === 123) {
