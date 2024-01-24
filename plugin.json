@@ -1,0 +1,87 @@
+{
+  "logo": "logo.png",
+  "main": "index.html",
+  "preload": "preload.js",
+  "name": "全球ping",
+  "version": "1.0.0",
+  "pluginName": "globalping",
+  "description": "全球ping",
+  "development": {
+    "main": "http://127.0.0.1:9000/index.html"
+  },
+  "author": "blowsnow",
+  "homepage": "https://github.com/utools-blowsnow/devtunnel",
+  "features": [
+    {
+      "code": "ping",
+      "explain": "ping",
+      "cmds": [
+        "ping",
+        {
+          "type": "regex",
+          "label": "ping ip",
+          "match": "/^((25[0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|\\d)(\\.((25[0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|\\d)){3}$/"
+        },
+        {
+          "type": "regex",
+          "label": "ping 域名",
+          "match": "/^([a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{1,6}$/"
+        }
+      ]
+    },
+    {
+      "code": "traceroute",
+      "explain": "traceroute",
+      "cmds": [
+        "traceroute",
+        "路由",
+        {
+          "type": "regex",
+          "label": "traceroute ip",
+          "match": "/^((25[0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|\\d)(\\.((25[0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|\\d)){3}$/"
+        },
+        {
+          "type": "regex",
+          "label": "traceroute 域名",
+          "match": "/^([a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{1,6}$/"
+        }
+      ]
+    },
+    {
+      "code": "dns",
+      "explain": "dns",
+      "cmds": [
+        "dns",
+        {
+          "type": "regex",
+          "label": "dns 域名",
+          "match": "/^([a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{1,6}$/"
+        }
+      ]
+    },
+    {
+      "code": "mtr",
+      "explain": "mtr",
+      "cmds": [
+        "mtr"
+      ]
+    },
+    {
+      "code": "http",
+      "explain": "http",
+      "cmds": [
+        "http",
+        {
+          "type": "regex",
+          "label": "http ip",
+          "match": "/^((25[0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|\\d)(\\.((25[0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|\\d)){3}$/"
+        },
+        {
+          "type": "regex",
+          "label": "http 域名",
+          "match": "/^([a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{1,6}$/"
+        }
+      ]
+    }
+  ]
+}
