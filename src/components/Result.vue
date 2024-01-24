@@ -63,7 +63,7 @@ export default defineComponent({
             type="success">完成</el-tag>
         <el-tag
             v-else-if="scope.row.result.status === 'failed'"
-            type="danger">失败</el-tag>
+            type="danger" v-tooltip="scope.row.result.rawOutput">失败</el-tag>
         <el-tag
             v-else-if="scope.row.result.status === 'in-progress'"
             type="primary">查询中</el-tag>
