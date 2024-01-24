@@ -5,6 +5,11 @@ import TracerouteMapDialog from "@/components/dialog/TracerouteMapDialog.vue";
 export default defineComponent({
   name: "Result",
   components: {TracerouteMapDialog},
+  data: () => {
+    return {
+      expandRowKeys: []
+    }
+  },
   props: {
     taskDetail: {
       type: Object,
@@ -35,6 +40,15 @@ export default defineComponent({
         return;
       }
       this.$refs.tracerouteMapDialog.open(item);
+    },
+    expandChange(row, expandedRows) {
+      console.log('expandChange', row, expandedRows);
+      this.expandRowKeys = expandedRows.map(item => {
+        return this.rowKey(item)
+      })
+    },
+    rowKey(row) {
+      return row.probe.city + row.probe.network + row.probe.asn + row.probe.country + row.probe.continent
     }
   }
 })
@@ -44,6 +58,9 @@ export default defineComponent({
   <div>
     <el-table
         :data="taskDetail.results"
+        :expand-row-keys="expandRowKeys"
+        :row-key="rowKey"
+        @expand-change="expandChange"
         style="width: 100%">
       <el-table-column type="expand">
         <template slot-scope="scope">
