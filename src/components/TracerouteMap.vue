@@ -1,12 +1,15 @@
 <script>
 import {defineComponent} from 'vue'
 import AMapLoader from '@amap/amap-jsapi-loader';
+import {useConfigStore} from "@/stores/config";
 
 export default defineComponent({
   name: "TracerouteMap",
   data() {
     return {
       AMap: null,
+      map: null,
+      configStore: useConfigStore()
     }
   },
   props: {
@@ -16,10 +19,6 @@ export default defineComponent({
         return []
       }
     }
-  },
-  async mounted() {
-  },
-  beforeDestroy() {
   },
   methods: {
     async init(ips){
@@ -42,9 +41,9 @@ export default defineComponent({
       console.log('points', points);
       this.initAMap(points);
     },
-    async initAMap(points) {
+    async initAmpLoader(key){
       let AMap = await AMapLoader.load({
-        key: "6f025e700cbacbb0bb866712d20bb35c", // 申请好的Web端开发者Key，首次调用 load 时必填
+        key: key, // 申请好的Web端开发者Key，首次调用 load 时必填
         version: "2.0", // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
         plugins: [], // 需要使用的的插件列表，如比例尺'AMap.Scale'等
         Loca: {
@@ -52,14 +51,19 @@ export default defineComponent({
         }
       })
       this.AMap = AMap;
-      let map = new AMap.Map("tracerouteMapContainer", {
+    },
+    async initAMap(points) {
+      if (!this.AMap) {
+        await this.initAmpLoader(this.configStore.mapKey);
+      }
+      let map = new this.AMap.Map("tracerouteMapContainer", {
         zoom: 2,
         showIndoorMap: false, //关闭室内地图
         //   viewMode: "3D",
         pitch: 48,
         center: [points[0].lng, points[0].lat],
       });
-
+      this.map = map;
       // 创建loca
       let loca = new Loca.Container({
         map: map,
@@ -191,7 +195,10 @@ export default defineComponent({
 </script>
 
 <template>
-  <div id="tracerouteMapContainer"></div>
+  <div>
+    高德地图KEY：<el-input v-model="configStore.mapKey" show-password size="mini" style="width: 200px;" @change="initAmpLoader"></el-input>
+    <div id="tracerouteMapContainer"></div>
+  </div>
 </template>
 
 <style scoped>

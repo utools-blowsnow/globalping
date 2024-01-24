@@ -2,7 +2,9 @@ import { defineStore } from 'pinia'
 
 export const useConfigStore = defineStore('config', {
     state: () => {
-        return {}
+        return {
+            mapKey: '6f025e700cbacbb0bb866712d20bb35c',
+        }
     },
     getters: {
     },
