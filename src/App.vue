@@ -174,7 +174,7 @@ export default {
         }
       ],
 
-
+      showOptions: false,
       taskDetail: {
         type: null,
         results: []
@@ -293,7 +293,7 @@ export default {
           <el-form-item label="目标">
             <el-input placeholder="目标地址" v-model="form.target" size="small"
                       @keydown.native.enter="createTask"
-                      style="width: 200px;"></el-input>
+                      style="width: 160px;"></el-input>
           </el-form-item>
           <el-form-item label="查询位置">
             <el-select placeholder="请选择位置" v-model="form.region" size="small"
@@ -313,9 +313,13 @@ export default {
             </template>
             <el-button type="primary" size="small"
                        @click="createTask">查询</el-button>
+            <el-button v-if="showOptions" type="primary" size="small" icon="el-icon-arrow-up"
+                       @click="showOptions = false">配置</el-button>
+            <el-button v-else type="primary" size="small" icon="el-icon-arrow-down"
+                       @click="showOptions = true">配置</el-button>
           </el-form-item>
         </div>
-        <div>
+        <div v-show="showOptions">
           <template v-if="form.type === 'ping'">
             <el-form-item label="包数量">
               <el-input-number v-model="formTypeOptions.ping.packets" size="small" :min="1"
