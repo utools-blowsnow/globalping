@@ -178,10 +178,17 @@ export default {
       taskDetail: {
         type: null,
         results: []
-      }
+      },
+
     }
   },
   watch: {},
+  computed: {
+    finishedTaskNum(){
+      if (!this.taskDetail.results) return 0;
+      return this.taskDetail.results.filter(item => item.result.status === 'finished').length
+    }
+  },
   mounted() {
     if (window['utools']) {
       utools.onPluginEnter(({code, type, payload}) => {
@@ -259,6 +266,7 @@ export default {
           let res = await checkMeasurement(taskId);
           console.log(res);
           this.taskDetail = res;
+          console.log('finishedTaskNum', this.finishedTaskNum);
           // in-progress┃finished
           if (res.status === 'finished') {
             clearInterval(timer);
@@ -458,7 +466,13 @@ export default {
         </div>
       </el-form>
       <div>
-        <div v-if="taskDetail.status">查询状态：<el-tag type="primary">{{ taskDetail.status === 'in-progress' ? '查询中...' : '查询完成'}}</el-tag></div>
+        <div v-if="taskDetail.status">
+          查询状态：
+          <el-tag v-if="taskDetail.status === 'in-progress'" type="warning">
+            查询中 {{ finishedTaskNum }}/{{ taskDetail.results.length }}
+          </el-tag>
+          <el-tag v-if="taskDetail.status === 'finished'" type="success">查询完成</el-tag>
+        </div>
         <result :task-detail="taskDetail"></result>
       </div>
     </div>
