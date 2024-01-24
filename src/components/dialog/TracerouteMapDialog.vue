@@ -14,12 +14,14 @@ export default defineComponent({
   methods: {
     open(item) {
       this.dialogVisible = true;
-      this.ips = item.result.hops.map(item => {
-        return item.resolvedAddress;
-      }).filter(item => item !== null);
-      this.$nextTick(() => {
-        this.$refs.tracerouteMap.init(this.ips);
-      })
+      setTimeout(() => {
+        this.ips = item.result.hops.map(item => {
+          return item.resolvedAddress;
+        }).filter(item => item !== null);
+        this.$nextTick(() => {
+          this.$refs.tracerouteMap.init(this.ips);
+        })
+      }, 10);
     },
     onClose() {
       this.ips = [];
