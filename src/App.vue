@@ -77,7 +77,7 @@ export default {
           // Min 0┃Max 65535 Default: 80
           port: 80,
           // HTTP┃HTTPS┃HTTP2
-          protocol: 'HTTPS',
+          protocol: 'HTTP',
         }
       },
       regions: [
