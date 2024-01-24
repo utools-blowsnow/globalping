@@ -26,6 +26,7 @@ export default defineComponent({
     onClose() {
       this.ips = [];
       this.dialogVisible = false;
+      this.$refs.tracerouteMap.close();
     }
   }
 })

@@ -182,6 +182,7 @@ export default {
         results: []
       },
 
+      timer: null,
     }
   },
   watch: {},
@@ -239,6 +240,7 @@ export default {
           }
         }
       }
+      if (this.timer) clearInterval(this.timer);
       this.taskDetail = {
         type: null,
         status: 'in-progress',
@@ -252,7 +254,7 @@ export default {
       });
       try {
         let taskId = await createMeasurement(params);
-        this.checkTaskLister(taskId);
+        this.checkTaskLister(taskId, true);
       } catch (e) {
         console.error("createTask", e)
         this.$message.error(e.message);
@@ -261,9 +263,9 @@ export default {
         loader.close();
       }
     },
-    checkTaskLister(taskId) {
+    checkTaskLister(taskId, first=false) {
       console.log(taskId);
-      let timer = setInterval(async () => {
+      let runTask = async () => {
         try {
           let res = await checkMeasurement(taskId);
           console.log(res);
@@ -271,14 +273,19 @@ export default {
           console.log('finishedTaskNum', this.finishedTaskNum);
           // in-progress┃finished
           if (res.status === 'finished') {
-            clearInterval(timer);
+            clearInterval(this.timer);
+            this.timer = null;
           }
         } catch (e) {
           console.error("checkTaskLister", e)
           this.$message.error(e.message);
           return;
         }
-      }, 1000);
+      }
+      if (first) {
+        runTask();
+      }
+      this.timer = setInterval(runTask, 1000);
     }
   }
 }

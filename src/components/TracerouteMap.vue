@@ -172,6 +172,10 @@ export default defineComponent({
           }
         })
       })
+    },
+    close() {
+      this.map.destroy()
+      this.map = null;
     }
     // async batchGetIpInfo(ips) {
     //   let promise = [];
