@@ -4,6 +4,7 @@ import Vue from 'vue'
 import {createMeasurement, checkMeasurement} from './api/globalping.ts'
 import Collapse from "@/components/collapse.vue";
 import Result from "@/components/Result.vue";
+import TracerouteMap from "@/components/TracerouteMap.vue";
 
 
 let vConsole = null;
@@ -21,7 +22,7 @@ document.addEventListener('keydown', function (e) {
 
 export default {
   name: 'App',
-  components: {Result, Collapse},
+  components: {TracerouteMap, Result, Collapse},
   data() {
     return {
       /* 为el-tooltip设置content值 */
