@@ -112,7 +112,14 @@ export async function createMeasurement(params: MeasurementParams) {
         }
     }).then(res => res.json());
     if (res.error) {
-        throw new Error(res.error.message);
+        let moreErrorMessage = [];
+        if (res.error.params) {
+            for (const key in res.error.params) {
+                moreErrorMessage.push(`${res.error.params[key]}`);
+            }
+        }
+        console.error('createMeasurement', res.error);
+        throw new Error(res.error.message + (moreErrorMessage.length > 0 ? ( "具体错误内容：" + moreErrorMessage.join(',')) : ''));
     }
     return res.id;
 }

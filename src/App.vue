@@ -3,6 +3,8 @@ import VConsole from 'vconsole';
 import Vue from 'vue'
 import {createMeasurement, checkMeasurement} from './api/globalping.ts'
 import Collapse from "@/components/collapse.vue";
+import Result from "@/components/Result.vue";
+
 
 let vConsole = null;
 
@@ -19,7 +21,7 @@ document.addEventListener('keydown', function (e) {
 
 export default {
   name: 'App',
-  components: {Collapse},
+  components: {Result, Collapse},
   data() {
     return {
       /* 为el-tooltip设置content值 */
@@ -207,6 +209,14 @@ export default {
         }];
       }
       delete params.region;
+      if (!params.target){
+        this.$message.error('请输入目标地址');
+        return;
+      }
+      if (params.target.startsWith('http://') || params.target.startsWith('https://')){
+        this.$message.error('目标地址不要带http://或https://');
+        return;
+      }
       // 排除空数据
       for (let key in params.measurementOptions) {
         if (params.measurementOptions[key] === null || params.measurementOptions[key] === undefined || params.measurementOptions[key] === '') {
@@ -220,9 +230,14 @@ export default {
           }
         }
       }
+      this.taskDetail = {
+        type: null,
+        status: 'in-progress',
+        results: []
+      };
       let loader = this.$loading({
         lock: true,
-        text: '正在处理中..',
+        text: '正在创建任务中..',
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       });
@@ -277,6 +292,7 @@ export default {
           </el-form-item>
           <el-form-item label="目标">
             <el-input placeholder="目标地址" v-model="form.target" size="small"
+                      @keydown.native.enter="createTask"
                       style="width: 200px;"></el-input>
           </el-form-item>
           <el-form-item label="查询位置">
@@ -295,7 +311,8 @@ export default {
             <template v-slot:label>
               &nbsp;
             </template>
-            <el-button type="primary" size="small" @click="createTask">查询</el-button>
+            <el-button type="primary" size="small"
+                       @click="createTask">查询</el-button>
           </el-form-item>
         </div>
         <div>
@@ -437,63 +454,8 @@ export default {
         </div>
       </el-form>
       <div>
-        <collapse v-for="item in taskDetail.results" :title="item" name="1">
-          <template v-slot:header>
-            <img style="width: 28px;height: 20px;"
-                 :src="'https://cdn.jsdelivr.net/npm/country-flag-icons@1.5.5/3x2/'+item.probe.country+'.svg'"
-                 alt="">
-            <span
-                style="margin-left: 20px;font-weight: 600;font-size: 16px;line-height: 24px;color: #17233a;">
-              {{ item.probe.city }},{{ item.probe.country }},{{
-                item.probe.continent
-              }} - {{ item.probe.network }}(AS{{ item.probe.asn }})
-            </span>
-            <div class="task-detail-item-info" v-if="item.result.status === 'finished'">
-              <template v-if="taskDetail.type === 'ping'">
-                <span>解析IP：<el-tag size="small">{{ item.result.resolvedAddress }}</el-tag> </span>
-                <span>总耗时：<el-tag size="small">{{ item.result.stats.total }}ms</el-tag> </span>
-                <span>平均耗时：<el-tag size="small">{{ item.result.stats.avg }}ms</el-tag> </span>
-                <span>最小耗时：<el-tag size="small">{{ item.result.stats.min }}ms</el-tag> </span>
-                <span>最大耗时：<el-tag size="small">{{ item.result.stats.max }}ms</el-tag> </span>
-                <span>丢包：<el-tag size="small">{{ item.result.stats.loss }}%</el-tag> </span>
-              </template>
-              <template v-else-if="taskDetail.type === 'traceroute'">
-                <span>DNS：<el-tag size="small">{{
-                    item.probe.resolvers.join(', ')
-                  }}</el-tag> </span>
-              </template>
-              <template v-else-if="taskDetail.type === 'dns'">
-                <span>总耗时：<el-tag size="small">{{ item.result.timings.total }}ms</el-tag> </span>
-                <span>DNS解析：<el-tag size="small">{{ item.result.resolver }}</el-tag> </span>
-              </template>
-              <template v-else-if="taskDetail.type === 'mtr'">
-                <span>解析IP：<el-tag size="small">{{ item.result.resolvedAddress }}</el-tag> </span>
-                <span v-if="item.result.resolvedHostname">解析域名：<el-tag
-                    size="small">{{ item.result.resolvedHostname }}</el-tag> </span>
-                <span>DNS：<el-tag size="small">{{
-                    item.probe.resolvers.join(', ')
-                  }}</el-tag> </span>
-              </template>
-              <template v-else-if="taskDetail.type === 'http'">
-                <span>总耗时：<el-tag size="small">{{ item.result.timings.total }}ms</el-tag> </span>
-                <span>DNS耗时：<el-tag size="small">{{ item.result.timings.dns }}ms</el-tag></span>
-                <span>TCP耗时：<el-tag size="small">{{ item.result.timings.tcp }}ms</el-tag></span>
-                <span v-if="item.result.timings.tls">TLS耗时：<el-tag
-                    size="small">{{ item.result.timings.tls }}ms</el-tag></span>
-                <span>TTFB耗时：<el-tag size="small">{{
-                    item.result.timings.firstByte
-                  }}ms</el-tag></span>
-                <span>下载耗时：<el-tag size="small">{{
-                    item.result.timings.download
-                  }}ms</el-tag></span>
-              </template>
-            </div>
-
-          </template>
-
-          <pre
-              style="white-space: break-spaces;margin: 10px 0;word-break: break-all;">{{ item.result.rawOutput }}</pre>
-        </collapse>
+        <div v-if="taskDetail.status">查询状态：<el-tag type="primary">{{ taskDetail.status === 'in-progress' ? '查询中...' : '查询完成'}}</el-tag></div>
+        <result :task-detail="taskDetail"></result>
       </div>
     </div>
 
