@@ -15,11 +15,12 @@ export default defineComponent({
   methods: {
     open(item) {
       this.dialogVisible = true;
+
       setTimeout(() => {
         this.ips = item.result.hops.map(item => {
           return item.resolvedAddress;
         }).filter(item => item !== null);
-        this.$nextTick(() => {
+        this.$nextTick(async () => {
           this.$refs.tracerouteMap.init(this.ips);
         })
       }, 10);
@@ -41,7 +42,7 @@ export default defineComponent({
         width="80%"
         :before-close="onClose">
       <amap-traceroute-map ref="tracerouteMap" :ips="ips">
-        <amap-traceroute-map>
+      </amap-traceroute-map>
     </el-dialog>
   </div>
 </template>

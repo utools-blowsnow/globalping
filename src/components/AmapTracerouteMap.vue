@@ -21,9 +21,25 @@ export default defineComponent({
   },
   methods: {
     async init(ips) {
+      let loader = this.$loading({
+        lock: true,
+        text: '正在加载路由地图',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)',
+        zIndex: 2099,
+      })
+
       this.ips = ips;
       let points = [];
-      let res = await this.batchGetIpInfo(this.ips);
+      let res;
+      try {
+        res = await this.batchGetIpInfo(this.ips);
+      }catch (e){
+        this.$message.error('获取IP路由位置信息失败');
+        return;
+      } finally{
+        loader.close();
+      }
       console.log(res);
       for (const re of res) {
         if (!re.latitude || !re.longitude) continue;
@@ -54,6 +70,8 @@ export default defineComponent({
         center: [points[0].longitude, points[0].latitude],
         zoom: 2
       });
+
+      this.map = map;
 
       var layer = new AMap.LabelsLayer({
         zooms: [3, 20],
@@ -94,7 +112,7 @@ export default defineComponent({
       }
       // 创建连接线
       // 绘制轨迹
-      var polyline = new AMap.Polyline({
+      let polyline = new AMap.Polyline({
         map: map,
         path: points.map(item => {
           return [item.longitude, item.latitude]
@@ -130,6 +148,8 @@ export default defineComponent({
       })
     },
     close() {
+      console.log('close map');
+      this.map.clearMap()
       this.map.destroy()
       this.map = null;
     }
