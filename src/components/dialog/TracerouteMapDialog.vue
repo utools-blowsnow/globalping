@@ -1,10 +1,11 @@
 <script>
 import {defineComponent} from 'vue'
 import TracerouteMap from "@/components/TracerouteMap.vue";
+import AmapTracerouteMap from "@/components/AmapTracerouteMap.vue";
 
 export default defineComponent({
   name: "TracerouteMapDialog",
-  components: {TracerouteMap},
+  components: {AmapTracerouteMap, TracerouteMap},
   data() {
     return {
       dialogVisible: false,
@@ -39,7 +40,8 @@ export default defineComponent({
         :visible.sync="dialogVisible"
         width="80%"
         :before-close="onClose">
-      <traceroute-map ref="tracerouteMap" :ips="ips"></traceroute-map>
+      <amap-traceroute-map ref="tracerouteMap" :ips="ips">
+        <amap-traceroute-map>
     </el-dialog>
   </div>
 </template>
