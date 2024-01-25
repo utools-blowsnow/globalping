@@ -15,9 +15,22 @@ export default defineComponent({
     ips: {
       type: Array,
       default: () => {
-        return []
+        return [
+          "140.91.212.31",
+          "43.241.189.30",
+          "43.241.189.29",
+          "114.31.199.41",
+          "4.16.45.169",
+          "4.15.125.54",
+          "202.97.27.241",
+          "113.108.81.189"
+        ]
       }
     }
+  },
+  mounted() {
+    console.log('mounted');
+    this.init(this.ips);
   },
   methods: {
     async init(ips) {

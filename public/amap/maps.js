@@ -13428,18 +13428,19 @@
     }
 
     function jd() {
-        var a = Oc.Hb + "/maps/modules?v=" + Oc.Xl + "&key=" + Oc.key + "&vrs=" + Oc.Fk + "&m=" + Xc.join(",");
-        kd() ? ld(a) : (fa.write('<script crossorigin="anonymous" id="amap_plus_js" src="' + a + '" type="text/javascript">\x3c/script>'), setTimeout(function () {
-            fa.getElementById("amap_plus_js") || ld(a)
-        }, 1))
+        // var a = Oc.Hb + "/maps/modules?v=" + Oc.Xl + "&key=" + Oc.key + "&vrs=" + Oc.Fk + "&m=" + Xc.join(",");
+        // kd() ? ld(a) : (fa.write('<script crossorigin="anonymous" id="amap_plus_js" src="' + a + '" type="text/javascript">\x3c/script>'), setTimeout(function () {
+        //     fa.getElementById("amap_plus_js") || ld(a)
+        // }, 1))
     }
 
     function ld(a) {
-        var b = fa.createElement("script");
-        b.charset = "utf-8";
-        b.src = a;
-        b.id = "amap_plus_js";
-        (a = fa.head || fa.getElementsByTagName("head")[0] || fa.body) && a.appendChild(b)
+        console.log('add script', a);
+        // var b = fa.createElement("script");
+        // b.charset = "utf-8";
+        // b.src = a;
+        // b.id = "amap_plus_js";
+        // (a = fa.head || fa.getElementsByTagName("head")[0] || fa.body) && a.appendChild(b)
     }
 
     function gd() {

@@ -5,6 +5,7 @@ import {createMeasurement, checkMeasurement} from './api/globalping.ts'
 import Collapse from "@/components/collapse.vue";
 import Result from "@/components/Result.vue";
 import TracerouteMap from "@/components/TracerouteMap.vue";
+import AmapTracerouteMap from "@/components/AmapTracerouteMap.vue";
 
 
 let vConsole = null;
@@ -23,7 +24,7 @@ document.addEventListener('keydown', function (e) {
 
 export default {
   name: 'App',
-  components: {TracerouteMap, Result, Collapse},
+  components: {AmapTracerouteMap, TracerouteMap, Result, Collapse},
   data() {
     return {
       /* 为el-tooltip设置content值 */
@@ -486,6 +487,7 @@ export default {
       </div>
     </div>
 
+    <amap-traceroute-map style="width: 600px;"></amap-traceroute-map>
     <!-- 添加全局公用el-tooltip -->
     <el-tooltip  :placement="tooltipPlacement" ref="tooltip" :content="tooltipContent"></el-tooltip>
   </div>

@@ -10,5 +10,17 @@
 <div id="app"></div>
 <script type="module" src="/src/main.ts"></script>
 <script src="./amap/maps.js"></script>
+<script src="./amap/style.js"></script>
+<script src="./amap/modules.js"></script>
+<script>
+    if (AMap['anole']){
+        console.log('init anole style');
+        var c = {
+            version: "20230103011500-20201123-1",
+            script: "AMap['anole']=" + JSON.stringify(AMap.anole)
+        };
+        localStorage.setItem("_AMap_anole", JSON.stringify(c))
+    }
+</script>
 </body>
 </html>
