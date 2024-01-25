@@ -487,7 +487,7 @@ export default {
       </div>
     </div>
 
-    <amap-traceroute-map style="width: 600px;"></amap-traceroute-map>
+<!--    <amap-traceroute-map style="width: 600px;"></amap-traceroute-map>-->
     <!-- 添加全局公用el-tooltip -->
     <el-tooltip  :placement="tooltipPlacement" ref="tooltip" :content="tooltipContent"></el-tooltip>
   </div>
