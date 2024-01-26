@@ -28,10 +28,6 @@ export default defineComponent({
       }
     }
   },
-  mounted() {
-    console.log('mounted');
-    this.init(this.ips);
-  },
   methods: {
     async init(ips) {
       let loader = this.$loading({
