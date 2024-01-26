@@ -106,7 +106,7 @@ export default defineComponent({
           offset: new AMap.Pixel(0, 5),
           anchor: 'bottom-center',
           label: {
-            content: `<div style="text-align: center">${point.country}${point.city}</div><div>${point.isp}</div>`,
+            content: `<div style="text-align: center">${point.country}${point.city}</div><div style="text-align: center">${point.isp}</div>`,
             offset: new AMap.Pixel(0, -10),  //设置文本标注偏移量
             direction: 'top' //设置文本标注方位
           },
