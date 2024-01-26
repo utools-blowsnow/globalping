@@ -57,11 +57,7 @@ export default defineComponent({
           let last = points[points.length - 1];
           if (last.latitude === re.latitude && last.longitude === re.longitude) continue;
         }
-        points.push({
-          ip: re.ip,
-          latitude: re.latitude,
-          longitude: re.longitude,
-        })
+        points.push(re)
       }
       console.log('points', points);
       try {
@@ -76,7 +72,7 @@ export default defineComponent({
       console.log('initMap', points);
       let map = new AMap.Map('tracerouteMapContainer2', {
         resizeEnable: true,
-        center: [points[0].longitude, points[0].latitude],
+        center: new AMap.LngLat(points[0].longitude, points[0].latitude),
         zoom: 2
       });
 
@@ -105,12 +101,12 @@ export default defineComponent({
       let i = 1;
       for (let point of points) {
         let circleMarker = new AMap.Marker({
-          position: [point.longitude, point.latitude],
+          position: new AMap.LngLat(point.longitude, point.latitude),
           icon: icon,
           offset: new AMap.Pixel(0, 5),
           anchor: 'bottom-center',
           label: {
-            content: point.ip,
+            content: point.isp,
             offset: new AMap.Pixel(0, -10),  //设置文本标注偏移量
             direction: 'top' //设置文本标注方位
           },
@@ -124,7 +120,7 @@ export default defineComponent({
       let polyline = new AMap.Polyline({
         map: map,
         path: points.map(item => {
-          return [item.longitude, item.latitude]
+          return new AMap.LngLat(item.longitude, item.latitude)
         }),
         showDir: true,
         strokeColor: "#28F",  //线颜色
@@ -150,6 +146,7 @@ export default defineComponent({
         return res.map(item => {
           return {
             ip: item.query,
+            isp: item.isp,
             latitude: item.lat,
             longitude: item.lon
           }
