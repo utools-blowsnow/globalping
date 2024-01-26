@@ -106,7 +106,7 @@ export default defineComponent({
           offset: new AMap.Pixel(0, 5),
           anchor: 'bottom-center',
           label: {
-            content: point.isp,
+            content: `<div style="text-align: center">${point.country}${point.city}</div><div>${point.isp}</div>`,
             offset: new AMap.Pixel(0, -10),  //设置文本标注偏移量
             direction: 'top' //设置文本标注方位
           },
@@ -139,12 +139,14 @@ export default defineComponent({
       return fetch(`https://api.ip2location.io/?ip=${ip}`).then(res => res.json());
     },
     batchGetIpInfo(ips) {
-      return fetch(`http://ip-api.com/batch`, {
+      return fetch(`http://ip-api.com/batch?lang=zh-CN`, {
         method: 'POST',
         body: JSON.stringify(ips)
       }).then(res => res.json()).then(res => {
         return res.map(item => {
           return {
+            country: item.country,
+            city: item.city,
             ip: item.query,
             isp: item.isp,
             latitude: item.lat,
