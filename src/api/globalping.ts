@@ -131,3 +131,11 @@ export async function checkMeasurement(id) {
     }
     return res;
 }
+
+export async function listProbes() {
+    let res = await request(`https://api.globalping.io/v1/probes`).then(res => res.json());
+    if (res.error) {
+        throw new Error(res.error.message);
+    }
+    return res;
+}

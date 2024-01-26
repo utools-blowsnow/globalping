@@ -1,7 +1,7 @@
 <script lang="ts">
 import VConsole from 'vconsole';
 import Vue from 'vue'
-import {createMeasurement, checkMeasurement} from './api/globalping.ts'
+import {createMeasurement, checkMeasurement, listProbes} from './api/globalping.ts'
 import Collapse from "@/components/collapse.vue";
 import Result from "@/components/Result.vue";
 import TracerouteMap from "@/components/TracerouteMap.vue";
@@ -83,8 +83,13 @@ export default {
       },
       regions: [
         {
-          label: '默认',
+          label: '全球（默认）',
           value: ''
+        },
+        {
+          label: '中国',
+          value: 'CN',
+          type: "country"
         },
         {
           label: '亚洲',
@@ -184,6 +189,8 @@ export default {
       },
 
       timer: null,
+
+      probes: [],
     }
   },
   watch: {},
@@ -191,9 +198,26 @@ export default {
     finishedTaskNum(){
       if (!this.taskDetail.results) return 0;
       return this.taskDetail.results.filter(item => item.result.status === 'finished').length
+    },
+    locationLabel(){
+      return (item) => {
+        let num = 0;
+        for (const probe of this.probes) {
+          if (item.type){
+            probe.location[item.type] === item.value && num++;
+          }else{
+            probe.location['region'] === item.value && num++;
+          }
+        }
+        if (num > 0){
+          return item.label + `(${num}节点)`;
+        }
+        return item.label;
+      }
     }
   },
   mounted() {
+    this.listProbes();
     if (window['utools']) {
       utools.onPluginEnter(({code, type, payload}) => {
         if (type === 'regex') {
@@ -210,14 +234,28 @@ export default {
     }
   },
   methods: {
+    async listProbes(){
+      // https://api.globalping.io/v1/probes
+      listProbes().then(res => {
+        this.probes = res;
+        console.log("listProbes",res);
+      })
+    },
     async createTask() {
       let params = {...this.form} as any;
       params.inProgressUpdates = true;
       params.measurementOptions = this.formTypeOptions[this.form.type];
       if (params.region) {
-        params.locations = [{
-          region: params.region
-        }];
+        let type = this.regions.find(item => item.value === params.region).type;
+        let location = {magic: params.region};
+        // if (type){
+        //   location[type] = params.region;
+        // }else{
+        //   location = {
+        //     country: params.region
+        //   }
+        // }
+        params.locations = [location];
       }
       delete params.region;
       if (!params.target){
@@ -316,7 +354,7 @@ export default {
           <el-form-item label="查询位置">
             <el-select placeholder="请选择位置" v-model="form.region" size="small"
                        style="width: 120px;">
-              <el-option v-for="item in regions" :label="item.label"
+              <el-option v-for="item in regions" :label="locationLabel(item)"
                          :value="item.value"></el-option>
             </el-select>
           </el-form-item>
